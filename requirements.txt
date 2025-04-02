@@ -1,4 +1,3 @@
-blinker @ file:///home/conda/feedstock_root/build_artifacts/blinker_1731096409132/work
 cffi @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_e4xd9yd9i2/croot/cffi_1736182819442/work
 click @ file:///home/conda/feedstock_root/build_artifacts/click_1734858813237/work
 cryptography @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_c5inr2hqv1/croot/cryptography_1732129882466/work
