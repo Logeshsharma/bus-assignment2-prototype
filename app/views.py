@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash, request, send_file, send_from_directory
+from flask import render_template, redirect, url_for, flash, request, send_file, send_from_directory, jsonify
 from app import app
 from app.models import User, Book, Loan
 from app.forms import ChooseForm, LoginForm
@@ -43,6 +43,22 @@ def login():
             next_page = url_for('home')
         return redirect(next_page)
     return render_template('generic_form.html', title='Sign In', form=form)
+
+
+@app.route('/mobile_login', methods=['GET', 'POST'])
+def mobile_login():
+    if request.method == 'POST':
+        username = request.json.get('username')
+        password = request.json.get('password')
+        user = db.session.scalar(
+            sa.select(User).where(User.username == username))
+
+        if user is None or not user.check_password(password):
+            return jsonify({"message": "Login failed. Invalid username or password", "status": "error"}), 401
+
+        return jsonify(
+            {"message": "Login successful", "status": "success", "userId": user.id, "username": user.username,
+             "email": user.email, "role": user.role, }), 200
 
 
 @app.route('/logout')
