@@ -44,8 +44,8 @@ def mobile_login():
             return jsonify({"message": "Login failed. Invalid username or password", "status": "error"}), 401
 
         return jsonify(
-            {"message": "Login successful", "status": "success", "userId": user.id, "username": user.username,
-             "email": user.email, "role": user.role, }), 200
+            {"message": "Login successful", "status": "success", "id": user.id, "username": user.username,
+             "email": user.email, "role": user.role, "groupId": user.group_id, }), 200
 
 
 @app.route('/get_group/<int:group_id>')
