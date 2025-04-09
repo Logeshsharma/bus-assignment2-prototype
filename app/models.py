@@ -65,3 +65,4 @@ class Group(db.Model):
             'users': [user.to_dict() for user in self.users]
         }
 ##Test commit
+print('Successful Push')
