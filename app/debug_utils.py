@@ -37,7 +37,7 @@ def reset_db():
 
 
     g1.users.extend([u1, u2, u3, u4, u5])
-    g1.users.extend([u6, u7, u8, u9, u10])
+    g2.users.extend([u6, u7, u8, u9, u10])
 
     db.session.commit()
 
