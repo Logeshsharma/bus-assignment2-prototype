@@ -17,7 +17,7 @@ class User(UserMixin, db.Model):
     __tablename__ = 'users'
 
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
-    student_id: so.Mapped[int] =  so.mapped_column(unique=True)
+    student_id: so.Mapped[int] = so.mapped_column(unique=True)
     username: so.Mapped[str] = so.mapped_column(sa.String(64), index=True, unique=True)
     email: so.Mapped[str] = so.mapped_column(sa.String(120), index=True, unique=True)
     password_hash: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
@@ -33,7 +33,7 @@ class User(UserMixin, db.Model):
             'username': self.username,
             'email': self.email,
             'role': self.role,
-            'group_id':self.group_id
+            'group_id': self.group_id
         }
 
     def __repr__(self):
@@ -64,7 +64,8 @@ class Group(db.Model):
     def to_dict(self):
         return {
             'id': self.id,
-            'users': [user.to_dict() for user in self.users]
+            'users': [user.to_dict() for user in self.users],
+            'taskstatus': [status.to_dict() for status in self.taskstatus]
         }
 
 
@@ -79,6 +80,16 @@ class Task(db.Model):
 
     groupstatus: so.Mapped[list['GroupTaskStatus']] = relationship(back_populates='task', cascade='all, delete-orphan')
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'description': self.description,
+            'isUpload': self.isUpload,
+            'groupstatus': [status.to_dict() for status in self.groupstatus]
+        }
+
+
 @dataclass
 class GroupTaskStatus(db.Model):
     __tablename__ = 'groupTaskStatuses'
@@ -90,4 +101,11 @@ class GroupTaskStatus(db.Model):
 
     task_id: so.Mapped[int] = so.mapped_column(ForeignKey('tasks.id'), primary_key=True)
     task: so.Mapped['Task'] = relationship(back_populates='groupstatus')
-##Test commit
+
+    def to_dict(self):
+        return {
+            'group_id': self.group_id,
+            'task_id': self.task_id,
+            'status': self.status,
+            'task': self.task.to_dict() if self.task else None
+        }
