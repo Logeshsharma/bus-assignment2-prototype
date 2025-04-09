@@ -64,3 +64,4 @@ class Group(db.Model):
             'name': self.name,
             'users': [user.to_dict() for user in self.users]
         }
+##Test commit
