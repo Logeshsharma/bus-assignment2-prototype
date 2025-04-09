@@ -1,3 +1,4 @@
+from enum import unique
 from typing import Optional
 import sqlalchemy as sa
 import sqlalchemy.orm as so
@@ -9,7 +10,6 @@ from sqlalchemy.testing.schema import mapped_column
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db, login
 from dataclasses import dataclass
-import datetime
 
 
 @dataclass
@@ -17,12 +17,14 @@ class User(UserMixin, db.Model):
     __tablename__ = 'users'
 
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    student_id: so.Mapped[int] =  so.mapped_column(unique=True)
     username: so.Mapped[str] = so.mapped_column(sa.String(64), index=True, unique=True)
     email: so.Mapped[str] = so.mapped_column(sa.String(120), index=True, unique=True)
     password_hash: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
     role: so.Mapped[str] = so.mapped_column(sa.String(10))
+    registered: so.Mapped[bool] = so.mapped_column(sa.Boolean, default=False)
 
-    group_id: so.Mapped[int] = mapped_column(ForeignKey('group.id'), index=True)
+    group_id: so.Mapped[int] = mapped_column(ForeignKey('groups.id'), index=True)
     group: so.Mapped['Group'] = relationship(back_populates='users')
 
     def to_dict(self):
@@ -45,23 +47,47 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
 
-@login.user_loader
-def load_user(id):
-    return db.session.get(User, int(id))
+# @login.user_loader
+# def load_user(id):
+#     return db.session.get(User, int(id))
 
 
 @dataclass
 class Group(db.Model):
-    __tablename__ = 'group'
+    __tablename__ = 'groups'
 
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
-    name: so.Mapped[str] = so.mapped_column(sa.String(120), index=True, unique=True)
     users: so.Mapped[list['User']] = relationship(back_populates='group', cascade='all, delete-orphan')
+
+    taskstatus: so.Mapped[list['GroupTaskStatus']] = relationship(back_populates='group', cascade='all, delete-orphan')
 
     def to_dict(self):
         return {
             'id': self.id,
-            'name': self.name,
             'users': [user.to_dict() for user in self.users]
         }
+
+
+@dataclass
+class Task(db.Model):
+    __tablename__ = 'tasks'
+
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    title: so.Mapped[str] = so.mapped_column(sa.String(64))
+    description: so.Mapped[str] = so.mapped_column(sa.String(1024))
+    isUpload: so.Mapped[bool] = so.mapped_column(default=False)
+
+    groupstatus: so.Mapped[list['GroupTaskStatus']] = relationship(back_populates='task', cascade='all, delete-orphan')
+
+@dataclass
+class GroupTaskStatus(db.Model):
+    __tablename__ = 'groupTaskStatuses'
+
+    status: so.Mapped[str] = so.mapped_column(sa.String(32), default="Unselected")
+
+    group_id: so.Mapped[int] = so.mapped_column(ForeignKey('groups.id'), primary_key=True)
+    group: so.Mapped['Group'] = relationship(back_populates='taskstatus')
+
+    task_id: so.Mapped[int] = so.mapped_column(ForeignKey('tasks.id'), primary_key=True)
+    task: so.Mapped['Task'] = relationship(back_populates='groupstatus')
 ##Test commit
