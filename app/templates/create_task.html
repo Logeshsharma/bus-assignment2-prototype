@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% import "bootstrap_wtf.html" as wtf %}
+
+{% block content %}
+    <div class="container">
+        <p class="h5">Create a task using the following parameters. Please note that each existing group will be assigned the task immediately with status "Unselected" and will start tracking its individual progress in the database.</p>
+        </br>
+    </div>
+    <div class="container">
+        {{ wtf.quick_form(form, action="", method="post", id="", novalidate=True, autofocus=False) }}
+    </div>
+{% endblock %}

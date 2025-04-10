@@ -17,3 +17,10 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
+
+
+class TaskForm(FlaskForm):
+    title = StringField("Task title", validators=[DataRequired(), Length(min=1, max=64, message="Task description must be no longer than 64 characters")])
+    description = StringField("Task description", validators=[DataRequired(), Length(min=1, max=1024, message="Task description must be no longer than 1024 characters")])
+    isUpload = BooleanField("Task requires file upload for verification and completion")
+    submit = SubmitField("Create task")
