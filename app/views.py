@@ -1,7 +1,9 @@
 from flask import render_template, redirect, url_for, flash, request, jsonify
+from werkzeug.security import generate_password_hash
+
 from app import app
 from app.models import User, Group, GroupTaskStatus
-from app.forms import LoginForm
+from app.forms import LoginForm, RegisterForm
 from flask_login import current_user, login_user, logout_user
 import sqlalchemy as sa
 from app import db
@@ -12,6 +14,33 @@ from urllib.parse import urlsplit
 def home():
     return render_template('home.html', title="Welcome Home :)")
 
+@app.route('/registration', methods=['GET', 'POST'])
+def registration():
+    if current_user.is_authenticated:
+        flash("You are already registered/logged in!", 'error')
+        return redirect(url_for('home'))
+    form = RegisterForm()
+    if form.validate_on_submit():
+        user_to_check = db.session.scalar(db.select(User).where(User.student_id==form.student_id.data))
+        if user_to_check == None:
+            flash("Entered credentials do no match our records - please check and try again", "danger")
+            return redirect(url_for('registration'))
+        if user_to_check.username != form.username.data or user_to_check.email != form.email.data:
+            flash("Entered credentials do no match our records - please check and try again", "danger")
+            return redirect(url_for('registration'))
+        if user_to_check.registered == True:
+            flash("You are already registered in the system! Head on to the mobile app and meet some new people!", "danger")
+            return redirect(url_for('registration'))
+        user_to_check.password_hash = generate_password_hash(form.password.data)
+        user_to_check.registered = True
+        db.session.add(user_to_check)
+        db.session.commit()
+        flash("You have successfully registered with Mix&Match. Head over to the mobile app and have a go at meeting new people!", "success")
+        return redirect(url_for("registration"))
+    return render_template('registration.html', title="Student registration", form=form)
+
+
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -21,7 +50,13 @@ def login():
     if form.validate_on_submit():
         user = db.session.scalar(
             sa.select(User).where(User.username == form.username.data))
-        if user is None or not user.check_password(form.password.data):
+        if user is None:
+            flash('Invalid username or password', 'danger')
+            return redirect(url_for('login'))
+        if user.role != "Admin":
+            flash("Only admins can use the online portal. For student and mentor access use the mobile Mix&Match app", "danger")
+            return redirect("login")
+        if not user.check_password(form.password.data):
             flash('Invalid username or password', 'danger')
             return redirect(url_for('login'))
         login_user(user, remember=form.remember_me.data)
@@ -114,21 +149,21 @@ def logout():
 # Error handler for 403 Forbidden
 @app.errorhandler(403)
 def error_403(error):
-    return render_template('errors/403.html', title='Error'), 403
+    return render_template('errors/403.html', title='Error 403'), 403
 
 
 # Handler for 404 Not Found
 @app.errorhandler(404)
 def error_404(error):
-    return render_template('errors/404.html', title='Error'), 404
+    return render_template('errors/404.html', title='Error 404'), 404
 
 
 @app.errorhandler(413)
 def error_413(error):
-    return render_template('errors/413.html', title='Error'), 413
+    return render_template('errors/413.html', title='Error 413'), 413
 
 
 # 500 Internal Server Error
 @app.errorhandler(500)
 def error_500(error):
-    return render_template('errors/500.html', title='Error'), 500
+    return render_template('errors/500.html', title='Error 500'), 500
