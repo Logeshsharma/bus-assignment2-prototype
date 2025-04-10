@@ -52,12 +52,16 @@ def login_mobile():
 def get_group_mobile(group_id):
     try:
         group = db.session.get(Group, group_id)
+        group_response = {
+            'group_id': group.id,
+            'users': [user.to_dict() for user in group.users]
+        }
         if group is None:
             return jsonify({'id': -1}), 200
     except Exception:
         return jsonify({'id': -1}), 200
 
-    return jsonify(group.to_dict()), 200
+    return jsonify(group_response), 200
 
 
 @app.route('/get_tasks_mobile/<int:group_id>')
@@ -93,7 +97,7 @@ def update_task_status():
             group_id = request.json.get('group_id')
             task_id = request.json.get('task_id')
             status = request.json.get('status')
-            task_status = db.session.get(GroupTaskStatus, (group_id , task_id))
+            task_status = db.session.get(GroupTaskStatus, (group_id, task_id))
             task_status.status = status
             db.session.commit()
     except Exception:
