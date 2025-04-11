@@ -25,6 +25,13 @@
                 <li class="nav-item">
                     <a class="nav-link" aria-current="page" href="{{ url_for('home') }}">Home</a>
                 </li>
+                <li class="nav-item">
+                    {% if current_user.is_anonymous %}
+                    {% elif current_user.role == "Admin" %}
+                        <a class="nav-link" aria-current="page" href="{{ url_for('create_task') }}">Create A Task</a>
+                    {% else %}
+                    {% endif %}
+                </li>
             </ul>
             <ul class="navbar-nav mb-2 mb-lg-0">
                 {% if current_user.is_anonymous %}

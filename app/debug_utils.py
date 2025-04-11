@@ -41,9 +41,9 @@ def reset_db():
 
     db.session.commit()
 
-    t1 = Task(title="Meet frens", description="Go outside and touch grass with some people", isUpload=True)
-    t2 = Task(title="Visit uni", description="Go outside and visit uni", isUpload=True)
-    t3 = Task(title="Visit fair", description="Meet people at the fair", isUpload=False)
+    t1 = Task(title="Meet frens", description="Go outside and touch grass with some people", isUpload=True, start_datetime=datetime.datetime.now() + datetime.timedelta(minutes=10), end_datetime=datetime.datetime.now() + datetime.timedelta(minutes=20), location="CS Building")
+    t2 = Task(title="Visit uni", description="Go outside and visit uni", isUpload=True, start_datetime=datetime.datetime.now() + datetime.timedelta(days=1), end_datetime=datetime.datetime.now() + datetime.timedelta(days=2), location="Library")
+    t3 = Task(title="Visit fair", description="Meet people at the fair", isUpload=False, start_datetime=datetime.datetime.now() + datetime.timedelta(weeks=1), end_datetime=datetime.datetime.now() + datetime.timedelta(weeks=2), location="Main Hall")
 
     db.session.add_all([t1,t2,t3])
     db.session.commit()

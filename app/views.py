@@ -93,7 +93,7 @@ def create_task():
         return redirect(url_for("home"))
     form = TaskForm()
     if form.validate_on_submit():
-        task = Task(title=form.title.data, description=form.description.data, isUpload=form.isUpload.data)
+        task = Task(title=form.title.data, description=form.description.data, isUpload=form.isUpload.data, start_datetime=form.start_datetime.data, end_datetime=form.end_datetime.data, location=form.location.data)
         db.session.add(task)
         db.session.flush()
         all_group_ids = db.session.scalars(db.select(Group.id)).all()
