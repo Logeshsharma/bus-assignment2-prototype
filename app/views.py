@@ -25,7 +25,7 @@ def registration():
         if user_to_check == None:
             flash("Entered credentials do no match our records - please check and try again", "danger")
             return redirect(url_for('registration'))
-        if user_to_check.username != form.username.data or user_to_check.email != form.email.data:
+        if user_to_check.email != form.email.data:
             flash("Entered credentials do no match our records - please check and try again", "danger")
             return redirect(url_for('registration'))
         if user_to_check.registered == True:
@@ -33,7 +33,6 @@ def registration():
             return redirect(url_for('registration'))
         user_to_check.password_hash = generate_password_hash(form.password.data)
         user_to_check.registered = True
-        db.session.add(user_to_check)
         db.session.commit()
         flash("You have successfully registered with Mix&Match. Head over to the mobile app and have a go at meeting new people!", "success")
         return redirect(url_for("registration"))
