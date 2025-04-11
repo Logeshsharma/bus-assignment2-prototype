@@ -115,7 +115,10 @@ def get_tasks_mobile(group_id):
                 'title': task_status.task.title,
                 'desc': task_status.task.description,
                 'isUpload': task_status.task.isUpload,
-                'status': task_status.status
+                'status': task_status.status,
+                'start_datetime' : task_status.task.start_datetime,
+                'end_datetime' : task_status.task.end_datetime,
+                'location' : task_status.task.location
             }
             group_response['tasks'].append(task)
     except Exception:
