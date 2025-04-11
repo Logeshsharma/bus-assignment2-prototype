@@ -1,8 +1,8 @@
 from flask import render_template, redirect, url_for, flash, request, jsonify
 from app import app
-from app.models import User, Group, GroupTaskStatus
-from app.forms import LoginForm
-from flask_login import current_user, login_user, logout_user
+from app.models import User, Group, GroupTaskStatus, Task
+from app.forms import LoginForm, TaskForm
+from flask_login import current_user, login_user, logout_user, login_required
 import sqlalchemy as sa
 from app import db
 from urllib.parse import urlsplit
@@ -88,6 +88,25 @@ def get_tasks_mobile(group_id):
         return jsonify({'tasks': []}), 200
 
     return jsonify(group_response), 200
+
+@app.route('/create_task', methods=['GET', 'POST'])
+@login_required
+def create_task():
+    if current_user.role != "Admin":
+        flash("Only admin users are allowed on that page", "danger")
+        return redirect(url_for("home"))
+    form = TaskForm()
+    if form.validate_on_submit():
+        task = Task(title=form.title.data, description=form.description.data, isUpload=form.isUpload.data, start_datetime=form.start_datetime.data, end_datetime=form.end_datetime.data, location=form.location.data)
+        db.session.add(task)
+        db.session.flush()
+        all_group_ids = db.session.scalars(db.select(Group.id)).all()
+        for group_id in all_group_ids:
+            db.session.add(GroupTaskStatus(task_id=task.id, group_id=group_id))
+        db.session.commit()
+        flash("Task created successfully",'success')
+        return redirect(url_for('create_task'))
+    return render_template('create_task.html', title="Create a new task", form=form)
 
 
 @app.route('/update_task_status', methods=['GET', 'POST'])
