@@ -45,6 +45,12 @@
                 </li>
                 {% endif %}
 
+                {% if current_user.is_anonymous %}
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="{{ url_for('registration') }}">Student Registration</a>
+                </li>
+                {% else %}
+                {% endif %}
             </ul>
         </div>
     </div>
