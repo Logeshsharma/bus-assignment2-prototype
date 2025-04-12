@@ -129,9 +129,12 @@ def get_tasks_mobile(group_id):
 @app.route('/get_group_messages/<int:group_id>/<int:number_of_messages>')
 def get_group_messages(group_id, number_of_messages):
     try:
-        messages = db.session.scalars(db.select(Message).where(Message.group_id == group_id).order_by(Message.sent_time.desc()).limit(number_of_messages))
+        messages = db.session.scalars(db.select(Message)
+                                      .where(Message.group_id == group_id)
+                                      .order_by(Message.sent_time.desc())
+                                      .limit(number_of_messages)).all()
         messages_dict = {
-            'messages' : [message.to_dict() for message in messages]
+            'messages' : [message.to_dict() for message in messages[::-1]]
         }
     except Exception:
         return jsonify({'message_id': -1}), 200
