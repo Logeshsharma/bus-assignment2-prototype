@@ -1,11 +1,12 @@
 from flask import render_template, redirect, url_for, flash, request, jsonify
 from app import app
 from app.models import User, Group, GroupTaskStatus
-from app.forms import LoginForm
-from flask_login import current_user, login_user, logout_user
+from app.forms import LoginForm, ChooseForm
+from flask_login import current_user, login_user, logout_user, login_required
 import sqlalchemy as sa
 from app import db
 from urllib.parse import urlsplit
+import random
 
 
 @app.route("/")
@@ -104,6 +105,74 @@ def update_task_status():
         return jsonify({'status': 'failed'}), 404
 
     return jsonify({'status': 'Updated'}), 200
+
+
+
+@app.route('/admin_account', methods=['GET', 'POST'])
+@login_required
+def admin_account():
+    form = ChooseForm
+    if current_user.is_authenticated and current_user.role == 'Admin':
+        q = sa.select(User)
+        all_users = db.session.scalars(q).all()
+        regist_status = {0:'False', 1:'True'}
+        return render_template('admin_account.html', title='Admin Account', all_users=all_users, regist_status=regist_status, form=form)
+    else:
+        flash(f'{current_user.username} you are not admin. Access denied', 'danger')
+    return redirect(url_for('home'))
+
+@app.route('/group_generation', methods=['GET', 'POST'])
+def group_generation():
+
+    eligible_users = User.query.filter(User.registered == 1, User.role != 'Admin', User.group_id == None).all()
+    if len(eligible_users) < 4:
+        flash(f'Sorry You already made groups once. So not enough users registered available', 'danger')
+        return redirect(url_for('home'))
+    else:
+        students = [user for user in eligible_users if user.role == 'Student']
+        mentors = [user for user in eligible_users if user.role == 'Mentor']
+        print('Student list:', students)
+        print('Mentors list:', mentors)
+        num_groups = min(len(students) // 4, len(mentors))
+        print(num_groups)
+        random.shuffle(students)
+        random.shuffle(mentors)
+
+        selected_mentor = random.sample(mentors, num_groups)
+        print('Mentors list:', selected_mentor)
+        for i in range(num_groups):
+            selected_students = random.sample(students, 4)
+            print(f'Student list{i}:', selected_students)
+            group = Group()
+            mentor = random.choice(selected_mentor)
+            print(f'Mentor{i}:', mentor)
+            # mentor.group = group
+            group.users.clear()
+            group.users.append(mentor)
+            group.users.extend(selected_students)
+
+            db.session.add(group)
+            db.session.commit()
+            selected_mentor.remove(mentor)
+            print(f'Mentor removed {i}:', mentor)
+            for student in selected_students:
+                students.remove(student)
+            print(f'Student removed list{i}:', selected_students)
+
+        q = sa.select(Group)
+        all_groups = db.session.scalars(q).all()
+        flash('Groups Successfully Generated', 'success')
+
+    return render_template('group_generation.html', title='First Groups Page', all_groups=all_groups)
+
+@app.route('/group', methods=['GET'])
+def group():
+    q = sa.select(Group)
+    all_groups = db.session.scalars(q).all()
+    for group in all_groups:
+        group.users.sort(key=lambda user: 0 if user.role == 'Mentor' else 1)
+    print('Groups list:',all_groups)
+    return render_template('group.html', title='Group Page', all_groups=all_groups)
 
 
 @app.route('/logout')

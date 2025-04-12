@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% import "bootstrap_wtf.html" as wtf %}
+
+{% block content %}
+<div>
+    <h1>Private Account For Admin</h1>
+
+    <p>Hello {{ current_user.username }} you can view all your groups here</p>
+
+    <p>This page is only available to you as the currently logged in user</p>
+
+    <p>The email address we have recorded for you is: {{ current_user.email }}</p>
+
+    <h3>List of Groups and Users </h3>
+    <head>
+            <style>
+            table, th, td {
+                border: 1px solid black;
+                border-collapse: collapse;
+                text-align: center;
+            }
+
+            </style>
+    </head>
+    <body class="flex justify-center items-center min-h-screen bg-gray-100">
+            <div class="overflow-x-auto">
+                <table class="table table-bordered table-striped border-collapse border border-black">
+                    <thead class="table-dark">
+                        <tr>
+                            <th rowspan="2" class="border border-black px-4 py-2">Group No</th>
+                            <th colspan="5" class="border border-black px-4 py-2">Members</th>
+                        </tr>
+                        <tr>
+                            <th class="border border-black px-4 py-2">Mentor</th>
+                            <th colspan="4" class="border border-black px-4 py-2">Student</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for group in all_groups %}
+                        <tr>
+                            <td class="border border-black px-4 py-2">{{ group.id }}</td>
+                            {% for user in group.users %}
+                                <td class="border border-black px-4 py-2">{{ user.username }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+    </body>
+
+    </div>
+</div>
+{% endblock %}
