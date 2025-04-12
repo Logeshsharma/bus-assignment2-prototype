@@ -4,6 +4,7 @@ import sqlalchemy as sa
 import sqlalchemy.orm as so
 from flask_login import UserMixin
 from flask_sqlalchemy.model import Model
+from pyexpat.errors import messages
 from sqlalchemy import ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy.testing.schema import mapped_column
@@ -17,7 +18,7 @@ class User(UserMixin, db.Model):
     __tablename__ = 'users'
 
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
-    student_id: so.Mapped[int] = so.mapped_column(unique=True)
+    student_id: so.Mapped[int] = so.mapped_column(unique=True, nullable=True)
     username: so.Mapped[str] = so.mapped_column(sa.String(64), index=True, unique=True)
     email: so.Mapped[str] = so.mapped_column(sa.String(120), index=True, unique=True)
     password_hash: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
@@ -26,6 +27,8 @@ class User(UserMixin, db.Model):
 
     group_id: so.Mapped[int] = mapped_column(ForeignKey('groups.id'), index=True)
     group: so.Mapped['Group'] = relationship(back_populates='users')
+
+    my_message: so.Mapped[list['Message']] = relationship(back_populates='user')
 
     def to_dict(self):
         return {
@@ -57,15 +60,23 @@ class Group(db.Model):
     __tablename__ = 'groups'
 
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
+
     users: so.Mapped[list['User']] = relationship(back_populates='group', cascade='all, delete-orphan')
 
     taskstatus: so.Mapped[list['GroupTaskStatus']] = relationship(back_populates='group', cascade='all, delete-orphan')
+
+    message: so.Mapped[list['Message']] = relationship(back_populates='group', cascade='all, delete-orphan')
 
     def to_dict(self):
         return {
             'id': self.id,
             'users': [user.to_dict() for user in self.users],
             'taskstatus': [status.to_dict() for status in self.taskstatus]
+        }
+
+    def messages_to_dict(self):
+        return  {
+            'messages': []
         }
 
 
@@ -114,4 +125,28 @@ class GroupTaskStatus(db.Model):
             'task_id': self.task_id,
             'status': self.status,
             'task': self.task.to_dict() if self.task else None
+        }
+
+@dataclass
+class Message(db.Model):
+    __tablename__ = 'messages'
+
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    sent_time: so.Mapped[datetime] = so.mapped_column(sa.DateTime(), index=True)
+    content: so.Mapped[str] = so.mapped_column(sa.String(1024))
+
+    group_id: so.Mapped[int] = so.mapped_column(ForeignKey('groups.id'), index=True)
+    group: so.Mapped['Group'] = relationship(back_populates='message')
+
+    user_id: so.Mapped[int] = so.mapped_column(ForeignKey('users.id'))
+    user: so.Mapped['User'] = relationship(back_populates='my_message')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'sent_time': self.sent_time,
+            'content': self.content,
+            'group_id': self.group_id,
+            'user_id': self.user_id,
+            'username': self.user.username
         }
