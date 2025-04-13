@@ -1,10 +1,10 @@
-from enum import unique
 from typing import Optional
+from datetime import datetime
 import sqlalchemy as sa
 import sqlalchemy.orm as so
 from flask_login import UserMixin
 from flask_sqlalchemy.model import Model
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy.testing.schema import mapped_column
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -77,6 +77,9 @@ class Task(db.Model):
     title: so.Mapped[str] = so.mapped_column(sa.String(64))
     description: so.Mapped[str] = so.mapped_column(sa.String(1024))
     isUpload: so.Mapped[bool] = so.mapped_column(default=False)
+    start_datetime: so.Mapped[datetime] = so.mapped_column(sa.DateTime())
+    end_datetime: so.Mapped[datetime] = so.mapped_column(sa.DateTime())
+    location: so.Mapped[str] = so.mapped_column(sa.String(128))
 
     groupstatus: so.Mapped[list['GroupTaskStatus']] = relationship(back_populates='task', cascade='all, delete-orphan')
 
@@ -86,7 +89,10 @@ class Task(db.Model):
             'title': self.title,
             'description': self.description,
             'isUpload': self.isUpload,
-            'groupstatus': [status.to_dict() for status in self.groupstatus]
+            'groupstatus': [status.to_dict() for status in self.groupstatus],
+            'start_datetime': self.start_datetime,
+            'end_datetime': self.end_datetime,
+            'location': self.location
         }
 
 
@@ -94,7 +100,7 @@ class Task(db.Model):
 class GroupTaskStatus(db.Model):
     __tablename__ = 'groupTaskStatuses'
 
-    status: so.Mapped[str] = so.mapped_column(sa.String(32), default="Unselected")
+    status: so.Mapped[str] = so.mapped_column(sa.String(32), default="Inactive")
 
     group_id: so.Mapped[int] = so.mapped_column(ForeignKey('groups.id'), primary_key=True)
     group: so.Mapped['Group'] = relationship(back_populates='taskstatus')

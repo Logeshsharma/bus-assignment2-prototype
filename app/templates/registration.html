@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% import "bootstrap_wtf.html" as wtf %}
+
+{% block content %}
+    <div class="container">
+        <p class="h5">Here you can enter your student details to activate your Mix&Match account and choose your password. Please make sure to enter all of your details as they appear in the official university records as these will be used to verify your identity.</p>
+        </br>
+    </div>
+    <div class="container">
+        {{ wtf.quick_form(form, action="", method="post", id="", novalidate=True, autofocus=False) }}
+    </div>
+{% endblock %}
