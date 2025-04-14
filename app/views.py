@@ -187,31 +187,35 @@ def group_generation():
     else:
         students = [user for user in eligible_users if user.role == 'Student']
         mentors = [user for user in eligible_users if user.role == 'Mentor']
-        print('Student list:', students)
-        print('Mentors list:', mentors)
 
         if len(mentors) < 1 and len(students) < 4:
             flash('Not enough students and mentors to form groups', 'danger')
             return redirect(url_for('home'))
+        elif len(mentors) < 1:
+            flash(f'Not enough Mentors to form groups', 'danger')
+            return redirect(url_for('home'))
+        elif len(students) < 4:
+            flash(f'Not enough Students to form groups', 'danger')
+            return redirect(url_for('home'))
         else:
             num_groups = min(len(students) // 4, len(mentors))
 
-            print(num_groups)
+
             random.shuffle(students)
             random.shuffle(mentors)
 
             selected_mentor = random.sample(mentors, num_groups)
-            print('Mentors list:', selected_mentor)
+
             for i in range(num_groups):
                 try:
                     selected_students = random.sample(students, 4)
                 except ValueError:
                     flash('We need at least 4 students to make a group', 'danger')
                     return redirect(url_for('home'))
-                print(f'Student list{i}:', selected_students)
+
                 group = Group()
                 mentor = random.choice(selected_mentor)
-                print(f'Mentor{i}:', mentor)
+
                 group.users.clear()
                 group.users.append(mentor)
                 group.users.extend(selected_students)
@@ -219,16 +223,16 @@ def group_generation():
                 db.session.add(group)
                 db.session.commit()
                 selected_mentor.remove(mentor)
-                print(f'Mentor removed {i}:', mentor)
+
                 for student in selected_students:
                     students.remove(student)
-                print(f'Student removed list{i}:', selected_students)
 
-            q = sa.select(Group)
-            all_groups = db.session.scalars(q).all()
+
+
             flash(f'{num_groups} Groups Successfully Generated. {len(students)} students remaining', 'success')
 
-    return render_template('group_generation.html', title='First Groups Page', all_groups=all_groups)
+    return redirect(url_for('group'))
+
 
 @app.route('/group', methods=['GET'])
 def group():
@@ -236,7 +240,6 @@ def group():
     all_groups = db.session.scalars(q).all()
     for group in all_groups:
         group.users.sort(key=lambda user: 0 if user.role == 'Mentor' else 1)
-    print('Groups list:',all_groups)
     return render_template('group.html', title='Group Page', all_groups=all_groups)
 
 
