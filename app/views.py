@@ -171,7 +171,7 @@ def admin_account():
     if current_user.is_authenticated and current_user.role == 'Admin':
         q = sa.select(User)
         all_users = db.session.scalars(q).all()
-        regist_status = {0:'False', 1:'True'}
+        regist_status = {0:'Not Registered', 1:'Registered'}
         return render_template('admin_account.html', title='Admin Account', all_users=all_users, regist_status=regist_status, form=form)
     else:
         flash(f'{current_user.username} you are not admin. Access denied', 'danger')
@@ -182,42 +182,51 @@ def group_generation():
 
     eligible_users = User.query.filter(User.registered == 1, User.role != 'Admin', User.group_id == None).all()
     if len(eligible_users) < 4:
-        flash(f'Sorry You already made groups once. So not enough users registered available', 'danger')
+        flash(f'Sorry You Might have already made groups once. So not enough users registered available', 'danger')
         return redirect(url_for('home'))
     else:
         students = [user for user in eligible_users if user.role == 'Student']
         mentors = [user for user in eligible_users if user.role == 'Mentor']
         print('Student list:', students)
         print('Mentors list:', mentors)
-        num_groups = min(len(students) // 4, len(mentors))
-        print(num_groups)
-        random.shuffle(students)
-        random.shuffle(mentors)
 
-        selected_mentor = random.sample(mentors, num_groups)
-        print('Mentors list:', selected_mentor)
-        for i in range(num_groups):
-            selected_students = random.sample(students, 4)
-            print(f'Student list{i}:', selected_students)
-            group = Group()
-            mentor = random.choice(selected_mentor)
-            print(f'Mentor{i}:', mentor)
-            # mentor.group = group
-            group.users.clear()
-            group.users.append(mentor)
-            group.users.extend(selected_students)
+        if len(mentors) < 1 and len(students) < 4:
+            flash('Not enough students and mentors to form groups', 'danger')
+            return redirect(url_for('home'))
+        else:
+            num_groups = min(len(students) // 4, len(mentors))
 
-            db.session.add(group)
-            db.session.commit()
-            selected_mentor.remove(mentor)
-            print(f'Mentor removed {i}:', mentor)
-            for student in selected_students:
-                students.remove(student)
-            print(f'Student removed list{i}:', selected_students)
+            print(num_groups)
+            random.shuffle(students)
+            random.shuffle(mentors)
 
-        q = sa.select(Group)
-        all_groups = db.session.scalars(q).all()
-        flash('Groups Successfully Generated', 'success')
+            selected_mentor = random.sample(mentors, num_groups)
+            print('Mentors list:', selected_mentor)
+            for i in range(num_groups):
+                try:
+                    selected_students = random.sample(students, 4)
+                except ValueError:
+                    flash('We need at least 4 students to make a group', 'danger')
+                    return redirect(url_for('home'))
+                print(f'Student list{i}:', selected_students)
+                group = Group()
+                mentor = random.choice(selected_mentor)
+                print(f'Mentor{i}:', mentor)
+                group.users.clear()
+                group.users.append(mentor)
+                group.users.extend(selected_students)
+
+                db.session.add(group)
+                db.session.commit()
+                selected_mentor.remove(mentor)
+                print(f'Mentor removed {i}:', mentor)
+                for student in selected_students:
+                    students.remove(student)
+                print(f'Student removed list{i}:', selected_students)
+
+            q = sa.select(Group)
+            all_groups = db.session.scalars(q).all()
+            flash(f'{num_groups} Groups Successfully Generated. {len(students)} students remaining', 'success')
 
     return render_template('group_generation.html', title='First Groups Page', all_groups=all_groups)
 
