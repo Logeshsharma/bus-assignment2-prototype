@@ -18,7 +18,7 @@ class User(UserMixin, db.Model):
     __tablename__ = 'users'
 
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
-    student_id: so.Mapped[int] = so.mapped_column(unique=True, nullable=True)
+    student_id: so.Mapped[Optional[int]] = so.mapped_column(unique=True, nullable=True)
     username: so.Mapped[str] = so.mapped_column(sa.String(64), index=True, unique=True)
     email: so.Mapped[str] = so.mapped_column(sa.String(120), index=True, unique=True)
     password_hash: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))

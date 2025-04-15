@@ -17,21 +17,21 @@ def reset_db():
     db.session.add_all([g1,g2])
     db.session.commit()
 
-    u1 = User(username='amy', student_id=1111111, email='amy@student.bham.ac.uk', role='Admin', password_hash=generate_password_hash('amy.pw'), registered=True, group_id=1)
+    u1 = User(username='amy', email='amy@student.bham.ac.uk', role='Admin', password_hash=generate_password_hash('amy.pw'), registered=True, group_id=1)
 
     u2 = User(username='tom', student_id=2222222, email='tom@student.bham.ac.uk', role='Student', registered=False, group_id=1)
 
-    u3 = User(username='yin', student_id=3333333, email='yin@student.bham.ac.uk', role='Admin', password_hash=generate_password_hash('amy.pw'), registered=True, group_id=1)
+    u3 = User(username='yin', email='yin@student.bham.ac.uk', role='Admin', password_hash=generate_password_hash('amy.pw'), registered=True, group_id=1)
 
     u4 = User(username='tariq', student_id=4444444,email='tariq@student.bham.ac.uk',role='Student', registered=False, group_id=1)
 
     u5 = User(username='jo', student_id=5555555, email='jo@bstudent.bham.ac.uk',role='Mentor', password_hash=generate_password_hash('amy.pw'), registered=True, group_id=1)
 
-    u6 = User(username='bob', student_id=6666666, email='bob@student.bham.ac.uk', role='Admin', password_hash=generate_password_hash('amy.pw'), registered=True, group_id=2)
+    u6 = User(username='bob', email='bob@student.bham.ac.uk', role='Admin', password_hash=generate_password_hash('amy.pw'), registered=True, group_id=2)
 
     u7 = User(username='lol', student_id=7777777, email='lol@student.bham.ac.uk', role='Student', registered=False, group_id=2)
 
-    u8 = User(username='xd', student_id=8888888, email='xd@student.bham.ac.uk', role='Admin', password_hash=generate_password_hash('amy.pw'), registered=True, group_id=2)
+    u8 = User(username='xd', email='xd@student.bham.ac.uk', role='Admin', password_hash=generate_password_hash('amy.pw'), registered=True, group_id=2)
 
     u9 = User(username='pphead', student_id=9999999, email='pphead@student.bham.ac.uk', role='Student', registered=False, group_id=2)
 
