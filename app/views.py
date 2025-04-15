@@ -12,7 +12,11 @@ from urllib.parse import urlsplit
 
 @app.route("/")
 def home():
-    return render_template('home.html', title="Welcome Home :)")
+    if current_user.is_authenticated:
+        username = current_user.username
+        return render_template("home_authenticated.html", username=username, title="")
+    else:
+        return render_template('home.html', title="")
 
 @app.route('/registration', methods=['GET', 'POST'])
 def registration():
@@ -36,7 +40,7 @@ def registration():
         db.session.commit()
         flash("You have successfully registered with Mix&Match. Head over to the mobile app and have a go at meeting new people!", "success")
         return redirect(url_for("registration"))
-    return render_template('registration.html', title="Student registration", form=form)
+    return render_template('registration.html', title="", form=form)
 
 
 
@@ -63,7 +67,7 @@ def login():
         if not next_page or urlsplit(next_page).netloc != '':
             next_page = url_for('home')
         return redirect(next_page)
-    return render_template('generic_form.html', title='Sign In', form=form)
+    return render_template('generic_form.html', title='', form=form)
 
 
 @app.route('/login_mobile', methods=['GET', 'POST'])
@@ -143,7 +147,7 @@ def create_task():
         db.session.commit()
         flash("Task created successfully",'success')
         return redirect(url_for('create_task'))
-    return render_template('create_task.html', title="Create a new task", form=form)
+    return render_template('create_task.html', title="", form=form)
 
 
 @app.route('/update_task_status', methods=['GET', 'POST'])
@@ -161,6 +165,36 @@ def update_task_status():
 
     return jsonify({'status': 'Updated'}), 200
 
+@app.route("/tasks", methods=["GET"])
+@login_required
+def view_tasks():
+    try:
+        tasks = db.session.scalars(db.select(Task)).all()
+
+
+        return render_template("view_tasks.html", tasks=tasks, title ="")
+    except Exception as e:
+        app.logger.error(f"Error in view_tasks: {str(e)}")
+        return render_template("errors/500.html", title="Error"), 500
+
+
+@app.route("/task/<int:task_id>", methods=["GET"])
+@login_required
+def task_details(task_id):
+    try:
+        task = db.session.get(Task, task_id)
+
+        if task is None:
+            flash("Task not found", "danger")
+            return redirect(url_for("view_tasks"))
+
+        task_statuses = db.session.scalars(db.select(GroupTaskStatus).where(GroupTaskStatus.task_id == task_id) ).all()
+
+        return render_template("task_details.html",task=task,task_statuses=task_statuses, title="")
+
+    except Exception as e:
+        app.logger.error(f"Error in task_details: {str(e)}")
+        return render_template("errors/500.html", title="Error"), 500
 
 @app.route('/logout')
 def logout():
