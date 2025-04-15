@@ -16,8 +16,8 @@ def reset_db():
     # # g2 = Group()
     # db.session.add_all([g1,g2])
     # db.session.commit()
-    a = User(username='Mashrur', student_id=1, email='mashrur@student.bham.ac.uk', role='Admin',
-              password_hash=generate_password_hash('amy.pw'), registered=True)
+    a = User(username='admin', student_id=1, email='admin.bham.ac.uk', role='Admin',
+              password_hash=generate_password_hash('admin.pw'), registered=True)
 
     u1 = User(username='amy', student_id=1111111, email='amy@student.bham.ac.uk', role='Student',
               password_hash=generate_password_hash('amy.pw'), registered=True)
