@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% import "bootstrap_wtf.html" as wtf %}
+
+{% block content %}
+<div>
+    <p>Hello <b>{{ current_user.username }}</b>,</p>
+    <p>Your account details are:</p>
+    <p><b>Account ID:</b> {{ current_user.id }}</p>
+    <p><b>Email address:</b> {{ current_user.email }}</p>
+
+
+    <h3>List of Users </h3>
+    <div class="container mt-4">
+        <!-- Bootstrap Table Responsive with Rounded Corners -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                <tr>
+                    <th>User Name</th>
+                    <th>User SID</th>
+                    <th>User Email</th>
+                    <th>User Role</th>
+                    <th>User Registration Status</th>
+                    <th>Group ID</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Loop to create table rows -->
+                {% for user in all_users %}
+                <tr class="{% if user.role == 'Mentor' %}table-primary{% endif %}">
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.student_id }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.role }}</td>
+                    <td>{{ regist_status[user.registered] }}</td>
+                    <td>{{ None if not user.group_id else user.group_id }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="container mt-4">
+        <a href="{{ url_for('group_generation') }}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Group Generation</a>
+    </div>
+</div>
+{% endblock %}

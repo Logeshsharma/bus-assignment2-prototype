@@ -25,7 +25,7 @@ class User(UserMixin, db.Model):
     role: so.Mapped[str] = so.mapped_column(sa.String(10))
     registered: so.Mapped[bool] = so.mapped_column(sa.Boolean, default=False)
 
-    group_id: so.Mapped[int] = mapped_column(ForeignKey('groups.id'), index=True)
+    group_id: so.Mapped[Optional[int]] = mapped_column(ForeignKey('groups.id'), index=True)
     group: so.Mapped['Group'] = relationship(back_populates='users')
 
     my_message: so.Mapped[list['Message']] = relationship(back_populates='user')
