@@ -1,26 +1,40 @@
+<style>
+    .btn-purple {
+        background-color: #6f42c1 !important;
+        color: white !important;
+    }
+    .btn-purple:hover {
+        background-color: #D8B7DD !important;
+        color: white !important;
+    }
+    .bold-text {
+        font-weight: bold !important; /* Force bold text */
+    }
+</style>
+
 {% macro form_field(field, autofocus) %}
   {%- if field.type == 'BooleanField' %}
   <div class="form-check mb-3">
     {{ field(class='form-check-input') }}
-    {{ field.label(class='form-check-label') }}
+    {{ field.label(class='form-check-label bold-text') }}
   </div>
   {%- elif field.type == 'RadioField' %}
-    {{ field.label(class='form-label') }}
+    {{ field.label(class='form-label bold-text') }}
     {%- for item in field %}
     <div class="form-check{% if loop.last %} mb-3{% endif %}">
       {{ item(class='form-check-input') }}
-      {{ item.label(class='form-check-label') }}
+      {{ item.label(class='form-check-label bold-text') }}
     </div>
     {%- endfor %}
   {%- elif field.type == 'SelectField' %}
-    {{ field.label(class='form-label') }}
-    {{ field(class='form-select mb-3' + (' is-invalid' if field.errors else '')) }}
+    {{ field.label(class='form-label bold-text') }}
+    {{ field(class='form-select mb-3 bold-text' + (' is-invalid' if field.errors else '')) }}
     {%- for error in field.errors %}
     <div class="invalid-feedback">{{ error }}</div>
     {%- endfor %}
   {%- elif field.type == 'TextAreaField' %}
   <div class="mb-3">
-    {{ field.label(class='form-label') }}
+    {{ field.label(class='form-label bold-text') }}
     {% if autofocus %}
       {{ field(class='form-control' + (' is-invalid' if field.errors else ''), autofocus=True) }}
     {% else %}
@@ -31,10 +45,10 @@
     {%- endfor %}
   </div>
   {%- elif field.type == 'SubmitField' %}
-  {{ field(class='btn btn-primary mb-3') }}
+  {{ field(class='btn btn-purple mb-3 bold-text') }}  <!-- Add bold-text here -->
   {%- else %}
   <div class="mb-3">
-    {{ field.label(class='form-label') }}
+    {{ field.label(class='form-label bold-text') }}  <!-- Add bold-text here -->
     {% if autofocus %}
       {{ field(class='form-control' + (' is-invalid' if field.errors else ''), autofocus=True) }}
     {% else %}
