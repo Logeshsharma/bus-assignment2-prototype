@@ -186,75 +186,52 @@ def admin_account():
         q = sa.select(User)
         all_users = db.session.scalars(q).all()
         regist_status = {0:'Not Registered', 1:'Registered'}
-        return render_template('admin_account.html', title='Admin Account', all_users=all_users, regist_status=regist_status, form=form)
+        return render_template('admin_account.html', title='Admin Account Panel', all_users=all_users, regist_status=regist_status, form=form)
     else:
-        flash(f'{current_user.username} you are not admin. Access denied', 'danger')
+        flash(f'Web portal features are accessible by admins only. Access denied', 'danger')
     return redirect(url_for('home'))
 
 @app.route('/group_generation', methods=['GET', 'POST'])
 def group_generation():
-
     eligible_users = User.query.filter(User.registered == 1, User.role != 'Admin', User.group_id == None).all()
-    if len(eligible_users) < 4:
-        flash(f'Sorry You Might have already made groups once. So not enough users registered available', 'danger')
-        return redirect(url_for('home'))
-    else:
-        students = [user for user in eligible_users if user.role == 'Student']
-        mentors = [user for user in eligible_users if user.role == 'Mentor']
-
-        if len(mentors) < 1 and len(students) < 4:
-            flash('Not enough students and mentors to form groups', 'danger')
-            return redirect(url_for('home'))
-        elif len(mentors) < 1:
-            flash(f'Not enough Mentors to form groups', 'danger')
-            return redirect(url_for('home'))
-        elif len(students) < 4:
-            flash(f'Not enough Students to form groups', 'danger')
-            return redirect(url_for('home'))
-        else:
-            num_groups = min(len(students) // 4, len(mentors))
-
-
-            random.shuffle(students)
-            random.shuffle(mentors)
-
-            selected_mentor = random.sample(mentors, num_groups)
-
-            for i in range(num_groups):
-                try:
-                    selected_students = random.sample(students, 4)
-                except ValueError:
-                    flash('We need at least 4 students to make a group', 'danger')
-                    return redirect(url_for('home'))
-
-                group = Group()
-                mentor = random.choice(selected_mentor)
-
-                group.users.clear()
-                group.users.append(mentor)
-                group.users.extend(selected_students)
-
-                db.session.add(group)
-                db.session.commit()
-                selected_mentor.remove(mentor)
-
-                for student in selected_students:
-                    students.remove(student)
+    students = [user for user in eligible_users if user.role == 'Student']
+    mentors = [user for user in eligible_users if user.role == 'Mentor']
+    if len(mentors) < 1 and len(students) < 4:
+        flash('Not enough students and mentors to form new groups.', 'danger')
+        return redirect(url_for('admin_account'))
+    elif len(mentors) < 1:
+        flash(f'Not enough mentors to form new groups.', 'danger')
+        return redirect(url_for('admin_account'))
+    elif len(students) < 4:
+        flash(f'Not enough students to form new groups.', 'danger')
+        return redirect(url_for('admin_account'))
+    num_groups = min(len(students) // 4, len(mentors))
+    random.shuffle(students)
+    random.shuffle(mentors)
+    selected_mentor = random.sample(mentors, num_groups)
+    for i in range(num_groups):
+        selected_students = random.sample(students, 4)
+        group = Group()
+        mentor = random.choice(selected_mentor)
+        group.users.clear()
+        group.users.append(mentor)
+        group.users.extend(selected_students)
+        db.session.add(group)
+        db.session.commit()
+        selected_mentor.remove(mentor)
+        for student in selected_students:
+            students.remove(student)
+    flash(f'{num_groups} Group(s) Successfully Generated. {len(students)} unassigned student(s) remaining.', 'success')
+    return redirect(url_for('groups'))
 
 
-
-            flash(f'{num_groups} Groups Successfully Generated. {len(students)} students remaining', 'success')
-
-    return redirect(url_for('group'))
-
-
-@app.route('/group', methods=['GET'])
-def group():
+@app.route('/groups', methods=['GET'])
+def groups():
     q = sa.select(Group)
     all_groups = db.session.scalars(q).all()
     for group in all_groups:
         group.users.sort(key=lambda user: 0 if user.role == 'Mentor' else 1)
-    return render_template('group.html', title='Group Page', all_groups=all_groups)
+    return render_template('groups.html', title='Group Page', all_groups=all_groups)
 
 
 @app.route('/logout')

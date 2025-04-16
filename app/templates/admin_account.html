@@ -3,13 +3,11 @@
 
 {% block content %}
 <div>
-    <h1>Private Account For Admin</h1>
+    <p>Hello <b>{{ current_user.username }}</b>,</p>
+    <p>Your account details are:</p>
+    <p><b>Account ID:</b> {{ current_user.id }}</p>
+    <p><b>Email address:</b> {{ current_user.email }}</p>
 
-    <p>Hello {{ current_user.username }}</p>
-
-    <p>This page is only available to you as the currently logged in user</p>
-
-    <p>The email address we have recorded for you is: {{ current_user.email }}</p>
 
     <h3>List of Users </h3>
     <div class="container mt-4">
