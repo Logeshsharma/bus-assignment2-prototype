@@ -220,7 +220,7 @@ def admin_account():
         q = sa.select(User)
         all_users = db.session.scalars(q).all()
         regist_status = {0:'Not Registered', 1:'Registered'}
-        return render_template('admin_account.html', title='Admin Account Panel', all_users=all_users, regist_status=regist_status, form=form)
+        return render_template('admin_account.html', title='', all_users=all_users, regist_status=regist_status, form=form)
     else:
         flash(f'Web portal features are accessible by admins only. Access denied', 'danger')
     return redirect(url_for('home'))
@@ -265,7 +265,7 @@ def groups():
     all_groups = db.session.scalars(q).all()
     for group in all_groups:
         group.users.sort(key=lambda user: 0 if user.role == 'Mentor' else 1)
-    return render_template('groups.html', title='Group Page', all_groups=all_groups)
+    return render_template('groups.html', title='', all_groups=all_groups)
 
 
 @app.route('/logout')

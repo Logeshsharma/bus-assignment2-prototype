@@ -2,45 +2,57 @@
 {% import "bootstrap_wtf.html" as wtf %}
 
 {% block content %}
-<div>
-    <h3>List of Groups and Users </h3>
-    <head>
-            <style>
-            table, th, td {
-                border: 1px solid black;
-                border-collapse: collapse;
-                text-align: center;
-            }
 
-            </style>
-    </head>
-    <body class="flex justify-center items-center min-h-screen bg-gray-100">
-            <div class="overflow-x-auto">
-                <table class="table table-bordered table-striped border-collapse border border-black">
-                    <thead class="table-dark">
-                        <tr>
-                            <th rowspan="2" class="border border-black px-4 py-2">Group No</th>
-                            <th colspan="5" class="border border-black px-4 py-2">Members</th>
-                        </tr>
-                        <tr>
-                            <th class="border border-black px-4 py-2">Mentor</th>
-                            <th colspan="4" class="border border-black px-4 py-2">Student</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% for group in all_groups %}
-                        <tr>
-                            <td class="border border-black px-4 py-2">{{ group.id }}</td>
-                            {% for user in group.users %}
-                                <td class="border border-black px-4 py-2">{{ user.username }}</td>
-                            {% endfor %}
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-    </body>
-
+<div class="container">
+    <div class="row my-5">
+        <div class="col-md-10 mx-auto text-center">
+            <h1 class="display-4 fw-bold">Groups and Users</h1>
+            <p class="lead text-muted">View all groups and users</p>
+            <hr class="my-4">
+        </div>
     </div>
 </div>
+<div class="row justify-content-center">
+  <div class="col-md-10">
+    <div class="card shadow">
+      <div class="card-header purple-header d-flex align-items-center">
+        <i class="bi bi-people-fill me-2 fs-4"></i>
+        <h3 class="mb-0">List of Groups and Users</h3>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover">
+            <thead>
+              <tr class="table-secondary text-center">
+                <th rowspan="2" class="align-middle" style="width: 100px;">Group No</th>
+                <th colspan="5" class="purple-header text-white">Members</th>
+              </tr>
+              <tr class="text-center">
+                <th class="table-secondary" style="width: 20%;">Mentor</th>
+                <th colspan="4" class="table-secondary">Students</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for group in all_groups %}
+                <tr>
+                  <td class="fw-bold text-center">{{ group.id }}</td>
+                  {% for user in group.users %}
+                    <td class="{% if user.role == 'Mentor' %}bg-light{% endif %}">
+                      {{ user.username }}
+                    </td>
+                  {% endfor %}
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card-footer d-flex justify-content-between align-items-center">
+        <small class="text-muted">Total Groups: {{ all_groups|length }}</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 {% endblock %}
