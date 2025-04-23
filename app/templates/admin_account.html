@@ -65,15 +65,19 @@
                              </td>
                              <td>
                              {% if user.role == 'Admin' %}
-                               <span class="badge rounded-pill px-3 py-2 purple-header">Admin</span>
+                               <span class="badge rounded-pill px-3 py-2 red-header">Admin</span>
                              {% elif user.role == 'Mentor' %}
-                               <span class="badge rounded-pill px-3 py-2 text-colour">Mentor</span>
+                               <span class="badge rounded-pill px-3 py-2 purple-header">Mentor</span>
                              {% else %}
-                               <span class="badge rounded-pill px-3 py-2 text-colour2">Student</span>
+                               <span class="badge rounded-pill px-3 py-2 lightblue-header">Student</span>
                              {% endif %}
                              </td>
                              <td class="text centre">
-                                 <span class="badge rounded-pill bg-success px-3 py-2">{{ regist_status[user.registered] }}</span>
+                                 {% if regist_status[user.registered] == "Registered" %}
+                                    <span class="badge rounded-pill bg-success px-3 py-2">{{ regist_status[user.registered] }}</span>
+                                 {% else %}
+                                    <span class="badge rounded-pill bg-secondary px-3 py-2">{{ regist_status[user.registered] }}</span>
+                                 {% endif %}
                              </td>
                              <td class="text centre">
                                  {% if user.group_id %}
@@ -107,5 +111,6 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 {% endblock %}
