@@ -226,6 +226,7 @@ def admin_account():
     return redirect(url_for('home'))
 
 @app.route('/group_generation', methods=['GET', 'POST'])
+@login_required
 def group_generation():
     eligible_users = User.query.filter(User.registered == 1, User.role != 'Admin', User.group_id == None).all()
     students = [user for user in eligible_users if user.role == 'Student']
@@ -265,6 +266,7 @@ def group_generation():
 
 
 @app.route('/groups', methods=['GET'])
+@login_required
 def groups():
     q = sa.select(Group)
     all_groups = db.session.scalars(q).all()
