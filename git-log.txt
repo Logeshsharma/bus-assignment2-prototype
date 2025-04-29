@@ -1,0 +1,67 @@
+10d1f82 - Logeshsharma, 3 minutes ago : Merge pull request #16 from Logeshsharma/fix/group_generation_old_tasks
+9586406 - Logeshsharma, 4 minutes ago : Merge pull request #15 from Logeshsharma/fix/mobile_login_roles_and_messages
+56f03ae - Arseniy Vasilko, 50 minutes ago : added @login_required to /groups and /group_generation because these two pages should only be accessible by admins, not just anytone.
+2f06011 - Arseniy Vasilko, 5 hours ago : Merge pull request #17 from Logeshsharma/fix/yeet
+39a65d7 - Arseniy Vasilko, 5 hours ago : Deleted "yeet" from the registration.html. Don't ask me how it's made its way there :D.
+9b08083 - Arseniy Vasilko, 5 hours ago : Change /group_generation to add all tasks to each new generated group. Now all groups created in the app should have their own list of existing tasks
+b7ba9ee - Arseniy Vasilko, 6 hours ago : Change /login_mobile API to only allow registered Students and Mentors into the app.
+965ceb4 - Logeshsharma, 2 days ago : Merge pull request #14 from Logeshsharma/fix/admin_page_user_role
+3f87433 - Arseniy Vasilko, 6 days ago : Fix invisible (white on white) text on the admin_account page. Changed colorcoding of user role pills so that admin is red (purple before), mentor is purple (invisible before), and student is light blue (invisible before). Added different colorcoding for User Registration Status column so that "Registered" is "success" color and "Not Registered" is "secondary" color (were both "success" before).
+3c60eac - Logeshsharma, 11 days ago : Merge pull request #13 from Logeshsharma/feature/app-styling
+5cb2f05 - CharlotteAshmore, 12 days ago : styling
+f6b4716 - Arseniy Vasilko, 13 days ago : Merge pull request #11 from Logeshsharma/features/tasks
+3c5e433 - Arseniy Vasilko, 13 days ago : Merge pull request #10 from Logeshsharma/feature/admin
+3257676 - Arseniy Vasilko, 13 days ago : Minor changes to flash error message content and logic in "/group_generation" Unsuccessful group creation attempts now redirect you the /admin_account page rather than /home changed /group address to /groups everywhere and refactored accordingly.
+2337996 - Logeshsharma, 2 weeks ago : Update DB
+5693866 - Logeshsharma, 2 weeks ago : Resolve conflict
+039bcd6 - CharlotteAshmore, 2 weeks ago : Task details and updated appearances
+949049c - Logeshsharma, 2 weeks ago : Merge branch 'main' into feature/admin
+fb1f126 - CharlotteAshmore, 2 weeks ago : Task details and updated appearances
+5e66c05 - Arseniy Vasilko, 2 weeks ago : Merge pull request #9 from Logeshsharma/feature/messenging
+afc3117 - Arseniy Vasilko, 2 weeks ago : Changed the model.py student id to optional
+cd09cb9 - Mashrur25, 2 weeks ago : Modified the group generatio to display appropriate error messages. deleted the group_generation.html from the previous version. deleted the debug print statements. By Mashrur.
+a203cdf - Mashrur25, 2 weeks ago : I added the check to see if 4 students and 1 mentor is present or not. fixed the fash message a little. By Mashrur.
+6fe6591 - Logeshsharma, 2 weeks ago : Resolve conflict
+45c502b - Logeshsharma, 2 weeks ago : Merge remote-tracking branch 'origin/main' into feature/admin
+74c01e5 - Arseniy Vasilko, 2 weeks ago : reversed the resulting json with messages in the group messages API as it makes more sense to have the earlier messages first in the resulting dictionary.
+af3c2b6 - Arseniy Vasilko, 2 weeks ago : Changed db model to include an additional table for message storing functionality. Many Messages are always related to one User and one Group A group-based message-requesting API has been added at /get_group_messages/<int:group_id>/<int:number_of_messages>. Returns the requested number of messages from the group with given id in a reverse chronological order (aka latest message comes first) as a json.
+79863ac - Mashrur25, 2 weeks ago : Added admin, group and group generation HTML. Added verification for only admins to create groups. Added randomised group generation. By Mashrur.
+9ee31fd - Logeshsharma, 3 weeks ago : Merge pull request #8 from Logeshsharma/fix/update-tasks-response
+46045aa - Logeshsharma, 3 weeks ago : Update tasks response
+6b23938 - Logeshsharma, 3 weeks ago : Merge pull request #7 from Logeshsharma/feature/registration
+1325d45 - Logeshsharma, 3 weeks ago : Reset db
+02e1db6 - Logeshsharma, 3 weeks ago : Merge pull request #4 from Logeshsharma/feature/registration
+5179cc4 - Logeshsharma, 3 weeks ago : Merge remote-tracking branch 'origin/feature/registration' into feature/registration
+098a9b9 - Arseniy Vasilko, 3 weeks ago : Additional start_datetime, end_datetime and location fields added to the db model. Same fields and respective validation added to the task form as well. "Create A Task" link added to navbar (Admins only)
+31f1e54 - Arseniy Vasilko, 3 weeks ago : Resolve conflict
+42a916d - Logeshsharma, 3 weeks ago : Merge pull request #5 from Logeshsharma/feature/create_task
+f26ca45 - Arseniy Vasilko, 3 weeks ago : Additional start_datetime, end_datetime and location fields added to the db model. Same fields and respective validation added to the task form as well. "Create A Task" link added to navbar (Admins only)
+bfdd4e6 - Arseniy Vasilko, 3 weeks ago : Additional start_datetime, end_datetime and location fields added to the db model. Same fields and respective validation added to the task form as well. "Create A Task" link added to navbar (Admins only)
+8def2bf - Logeshsharma, 3 weeks ago : Merge pull request #6 from Logeshsharma/fix/get-group-response
+a384c45 - Logeshsharma, 3 weeks ago : Fix get group mobile response
+15afe17 - Arseniy Vasilko, 3 weeks ago : Adds task creation functionality for the "Admin" role. Once a task is created, it is automatically assigned to each existing group and tracked individually.
+9a9f559 - Arseniy Vasilko, 3 weeks ago : Adds registration functionality for "Student" role Fixes login to only allow "Admin" users Passwords are now null for non-registered users, and get set once the user registers
+0ae57ec - Logeshsharma, 3 weeks ago : Merge pull request #3 from Logeshsharma/feature/mobile-tasks-status-api
+aec6b16 - Logeshsharma, 3 weeks ago : Implement mobile tasks and status update API
+1707bad - Logeshsharma, 3 weeks ago : Ignore .idea directory
+e0919fd - Logeshsharma, 3 weeks ago : Merge remote-tracking branch 'origin/main'
+771450d - Logeshsharma, 3 weeks ago : Add gitignore
+1242c8e - Logeshsharma, 3 weeks ago : Merge pull request #2 from Logeshsharma/fix/user-model-login-config
+ab213a2 - Logeshsharma, 3 weeks ago : Uncomment load_user
+82d528c - Logeshsharma, 3 weeks ago : Merge pull request #1 from Logeshsharma/feature/database_model
+d9677d8 - Logeshsharma, 3 weeks ago : Update debug_utils
+035d159 - Dwalwoody, 3 weeks ago : -model.py updated to reflect a new database structure -debug_utils.py now add groups, users, tasks and populate taskstatuses for all groups and users
+0c11134 - M, 3 weeks ago : Test commit first
+d753195 - Logeshsharma, 3 weeks ago : Update user model for mobile login
+260eea6 - Logeshsharma, 3 weeks ago : Implemented Group API
+5441a0a - Logeshsharma, 4 weeks ago : Remove test file
+a9b7924 - Logeshsharma, 4 weeks ago : For testing git push
+f7f1392 - Logeshsharma, 4 weeks ago : Delete test.html
+c278cb4 - Logeshsharma, 4 weeks ago : Test action
+d74046b - Logeshsharma, 4 weeks ago : Add mobile login end point
+2e63649 - Logeshsharma, 4 weeks ago : deploy setup
+20ffff2 - Logeshsharma, 4 weeks ago : deploy setup
+cd1e7e3 - Logeshsharma, 4 weeks ago : deploy setup
+3d9deb6 - Logeshsharma, 4 weeks ago : deploy setup
+6b4c835 - Logeshsharma, 4 weeks ago : deploy setup
+d4fec27 - Logeshsharma, 4 weeks ago : initial setup
