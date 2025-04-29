@@ -232,6 +232,7 @@ def admin_account():
     return redirect(url_for('home'))
 
 @app.route('/group_generation', methods=['GET', 'POST'])
+@login_required
 def group_generation():
     eligible_users = User.query.filter(User.registered == 1, User.role != 'Admin', User.group_id == None).all()
     students = [user for user in eligible_users if user.role == 'Student']
@@ -261,11 +262,17 @@ def group_generation():
         selected_mentor.remove(mentor)
         for student in selected_students:
             students.remove(student)
+        tasks = db.session.scalars(db.select(Task))
+        for task in tasks:
+            db.session.add(GroupTaskStatus(status="Inactive", group_id=group.id, task_id=task.id))
+        db.session.commit()
+
     flash(f'{num_groups} Group(s) Successfully Generated. {len(students)} unassigned student(s) remaining.', 'success')
     return redirect(url_for('groups'))
 
 
 @app.route('/groups', methods=['GET'])
+@login_required
 def groups():
     q = sa.select(Group)
     all_groups = db.session.scalars(q).all()
