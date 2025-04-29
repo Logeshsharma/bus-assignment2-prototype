@@ -255,6 +255,11 @@ def group_generation():
         selected_mentor.remove(mentor)
         for student in selected_students:
             students.remove(student)
+        tasks = db.session.scalars(db.select(Task))
+        for task in tasks:
+            db.session.add(GroupTaskStatus(status="Inactive", group_id=group.id, task_id=task.id))
+        db.session.commit()
+
     flash(f'{num_groups} Group(s) Successfully Generated. {len(students)} unassigned student(s) remaining.', 'success')
     return redirect(url_for('groups'))
 
