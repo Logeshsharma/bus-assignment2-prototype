@@ -22,7 +22,7 @@ def reset_db():
     u1 = User(username='amy', student_id=1111111, email='amy@student.bham.ac.uk', role='Student',
               password_hash=generate_password_hash('amy.pw'), registered=True)
 
-    u2 = User(username='tom', student_id=2222222, email='tom@student.bham.ac.uk', role='Student', registered=True)
+    u2 = User(username='tom', student_id=2222222, email='tom@student.bham.ac.uk', role='Student', registered=False)
 
     u3 = User(username='yin', student_id=3333333, email='yin@student.bham.ac.uk', role='Admin',
               password_hash=generate_password_hash('amy.pw'), registered=True)

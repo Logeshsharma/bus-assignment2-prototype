@@ -79,14 +79,15 @@ def login_mobile():
         user = db.session.scalar(
             sa.select(User).where(User.username == username))
 
-        if user.role == "Admin":
-            return jsonify({"message": "Mobile app only available for students and mentors. To access the admin features, please use the web app backend at https://bus-test-f592.onrender.com/login", "status": "error"}), 401
-
-        if user.registered == False:
+        if not user.registered:
             return jsonify({"message": "Student not yet registered. To register for the Mix&Match app, please visit the following page: https://bus-test-f592.onrender.com/registration", "status": "error"}), 401
 
         if user is None or not user.check_password(password):
             return jsonify({"message": "Login failed. Invalid username or password", "status": "error"}), 401
+
+        if user.role == "Admin":
+            return jsonify({"message": "Mobile app only available for students and mentors. To access the admin features, please use the web app backend at https://bus-test-f592.onrender.com/login", "status": "error"}), 401
+
 
         return jsonify(
             {"message": "Login successful", "status": "success", "id": user.id, "username": user.username,
