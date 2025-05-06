@@ -38,17 +38,23 @@ The Mix&Match Android App allows Students and Mentors to view other Students wit
 ---
 
 ## Core functionalities
-    
-- ***Note:**
-- **Student Registration:** Allows unregistered Students to validate their identity and register in the system by comparing a combination of username and student_id to the 1-st year student database (mock database used for prototype).
-- **Group formation:** Gives admin users a button that assigns all non-grouped students into groups of 4 along with a 1 mentor (total 5), given enough students and mentors are available.
-- **Mentor Tasks:** Mentors can create and validate tasks, as well as assign and approve rewards.  
+
+- **Student Registration:** Allows unregistered Students to validate their identity and register in the system by comparing a combination of username and student_id to the 1-st year student database (mock database used for prototype). Once the student is registered, their "registered" field value is changed to True in "users" table, and they become eligible for Group Generation and using the Android App.
+- **Group formation:** Gives admin users a button that assigns all non-grouped students into groups of 4 along with a 1 mentor (total 5), given enough students and mentors are available. Group is created in the database "groups" table and stores the names of all Students/Mentors in the group, as well as the group's progression status for every task "groupTaskStatuses".
+- **Group task creation:** Admins can create tasks in the Mix&Match Admin through a form on the /create_task page. Tasks are then recorded into the database "tasks" table, and assigned to every existing group with each group's own task status being tracked in "groupTaskStatuses" table by using combination of task and group foreign keys.  
+- **Task completion/validation** Students can mark the group task statuses as completed. Mentors can then validate the completion tasks in the app. All changes reflected in database's "groupTaskStatuses" table.
+  - **Note:** A significant part of this functionality is implemented in the Android Mix&Match App, as Mentors and Students are meant to primarily use it. For more details about this functionality and implementation please refer to the Mix&Match Android App's documentation or view the source code at: https://github.com/Logeshsharma/bus-assignment2-moibleapp-prototype.git  
 
 
 ## Secondary/Supporting functionalities
-- **User Authentication/Login:** Users can log in with university credentials, which also define their role (administrator, mentor, or student). 
-- **Student Tasks:** Students can view tasks and submit evidence of completion to potentially earn rewards. 
+- **User Authentication/Login:** Admins can log in to Mix&Match Admin with their credentials. Custom error messages are displayed if a Student/Mentor tries to log into the Mix&Match Admin.
+- **User Logout:** Logs the current User out of the app.
 - **Home Page:** Serves as a portal to access group and task features.
+- **View Tasks:** Displays an overview of existing tasks in the system as a table.
+- **Task Details:** Given a task id, displays a particular task's details including Task id, Description, Upload required status, and every group's completion status for that task as a table.
+- **View Tasks:** Displays an overview of existing tasks in the system as a table.
+- **Admin Account Panel:** Displays an overview of each User's details in the system including User Name, User SID, User Email, User Role, User Registration Status, Group ID as atable. Also the logged in Admin's Name, Account ID, and email address.
+- **View All Groups:** Displays and overview of all groups in the system, including Group id, Student names and Mentor names as a table. Total number of groups displayed.
 ---
 
 ## Contributors
