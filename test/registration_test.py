@@ -2,6 +2,9 @@ import werkzeug
 werkzeug.__version__ = "2.3.8"
 
 import unittest
+
+from werkzeug.security import generate_password_hash
+
 from app import app, db
 
 class RegistrationTestCase(unittest.TestCase):
@@ -23,9 +26,9 @@ class RegistrationTestCase(unittest.TestCase):
     def test_registration_success(self):
         response = self.client.post('/registration', data={
             'student_id': '12345',
-            'email': 'test@example.com',
-            'password': 'testpass',
-            'confirm': 'testpass'
+            'email': 'amywong@student.bham.ac.uk',
+            'password': generate_password_hash('Amywong1234!'),
+            'confirm': generate_password_hash('Amywong1234!')
         }, follow_redirects=True)
 
         self.assertEqual(response.status_code, 200)
@@ -34,19 +37,19 @@ class RegistrationTestCase(unittest.TestCase):
         response = self.client.post('/registration', data={
             'student_id': '12345',
             'email': '',
-            'password': 'testpass',
-            'confirm': 'testpass'
+            'password': generate_password_hash('Amywong1234!'),
+            'confirm': generate_password_hash('Amywong1234!'),
         }, follow_redirects=True)
 
         self.assertIn('This field is required.', response.data.decode())
         self.assertIn('email', response.data.decode())
 
+
     def test_registration_failure_invalid_credentials(self):
-        """Test registration failure when student_id or email do not match existing records"""
-        # Try to register with incorrect credentials (either student_id or email is wrong)
+        # Try to register with incorrect credentials - student_id or email is wrong
         response = self.client.post('/registration', data={
-            'student_id': '99999',  # Invalid student_id that doesn't exist in the database
-            'email': 'wrongemail@example.com',  # Invalid email that doesn't match any user
+            'student_id': '99999',  # Invalid student_id - doesn't exist in the database
+            'email': 'wrongemail@example.com',  # Invalid email - doesn't match any user
             'password': 'testpass',
             'confirm': 'testpass'
         }, follow_redirects=True)
@@ -54,9 +57,7 @@ class RegistrationTestCase(unittest.TestCase):
         # Check that the form validation error for email is shown
         self.assertIn(b'Email must be the student university email ending with', response.data)
 
-        # Alternatively, check that the student ID is invalid (in case the student_id format is also wrong)
+        # Check the student ID is invalid
         self.assertIn(b'Student ID must be between 7 and 8 digits', response.data)
 
-        # Ensure we are still on the registration page and it's still rendering the form
         self.assertEqual(response.status_code, 200)
-
