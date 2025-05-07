@@ -2,15 +2,14 @@
 
 ## Project Overview
 
-**Mix and Match** is an app designed for first-year students, with a focus on international students who often arrive on campus alone, without existing friendships or family support. The main purpose of the app is to bring these students together and facilitate new friendships by generating groups from registered Students and assigning them collective tasks and on-campus activities.
+**Mix and Match** is system designed for first-year students, with a focus on international students who often arrive on campus alone, without existing friendships or family support. The main purpose of the app is to bring these students together and facilitate new friendships by generating groups from registered Students and assigning them collective tasks and on-campus activities.
 
-The app is split into two sub-apps (Mix&Match Admin and Mix&Match Android App) and features 3 user types: Students, Mentors (Senior student volunteers) and Admins. Admins are meant to solely use the Mix&Match Admin, while Students and Mentors only use the Mix&Match Android App. The only exception is: Students must use the Mix&Match Admin Backend for initial registration (only once).
+The system is split into two components (Mix&Match Admin and Mix&Match Android App) and features 3 user types: Students, Mentors (Senior student volunteers) and Admins. Admins are meant to solely use the Mix&Match Admin, while Students and Mentors only use the Mix&Match Android App. The only exception is: Students must use the Mix&Match Admin Backend for initial registration (only once).
 
-The Mix&Match Admin allows admins to perform Student/Mentor group formation, view students' details, view groups' details and generate tasks for the groups.
-
-The Mix&Match Android App allows Students and Mentors to view other Students within their group and tasks assigned to their group. Additionally, a task completion and confirmation system is in place within group where Mentors can validate activities completed by the group's Students. The original version of the app envisioned messaging and task rewards functionality within each group, however, it was cut from the prototype due to time limitations.
+This documentation focuses on Mix&Match Admin, which is primarily meant for Admin users. To access the Mix&Match Android App's documentation, please visit https://github.com/Logeshsharma/bus-assignment2-moibleapp-prototype.git
 
 ---
+
 
 ## How to Run the Project
 
@@ -25,7 +24,9 @@ The Mix&Match Android App allows Students and Mentors to view other Students wit
 4. Run the application using the `run.py` entry point.  
 5. Access the application in your browser at [127.0.0.1:5000](http://127.0.0.1:5000).
 
----
+
+### Disclaimer: The current implementation of the Mix&Match Android will not connect to the local version of the Mix&Match Admin application at http://127.0.0.1:5000. Instead, it's hardcoded to connect to https://bus-test-f592.onrender.com running on a free server (allow up to a minute to load for the first time). Therefore, if you wish to test whether the changes in Mix&Match Admin's database reflect in the Android App, please test these changes at the onrender.com server address provided. Bear in mind that the server/db resets after approx 15 minutes of inactivity.
+
 
 ## Languages and Frameworks Used
 
@@ -53,8 +54,15 @@ The Mix&Match Android App allows Students and Mentors to view other Students wit
 - **View Tasks:** Displays an overview of existing tasks in the system as a table.
 - **Task Details:** Given a task id, displays a particular task's details including Task id, Description, Upload required status, and every group's completion status for that task as a table.
 - **View Tasks:** Displays an overview of existing tasks in the system as a table.
-- **Admin Account Panel:** Displays an overview of each User's details in the system including User Name, User SID, User Email, User Role, User Registration Status, Group ID as atable. Also the logged in Admin's Name, Account ID, and email address.
+- **Admin Account Panel:** Displays an overview of each User's details in the system including User Name, User SID, User Email, User Role, User Registration Status, Group ID as a table. Also the logged in Admin's Name, Account ID, and email address.
 - **View All Groups:** Displays and overview of all groups in the system, including Group id, Student names and Mentor names as a table. Total number of groups displayed.
+- **Communication with Android Mix&Match App:** The Mix&Match Admin features multiple web API addresses which are used to communicate with the Mix&Match Android App through json files they are:
+  - **Mobile Login:** Upon receiving a json with username and password, authenticates their combination in the db and if successful, sends back json with result message, status and user's details, else returns a json with appropriate json message and erros status.
+  - **Get group information:** /get_group_mobile/\<int:group_id> if a group with this id exists, returns all of its ids and users from the db's "groups" table as a json, else returns json {'id': -1}
+  - **Get group's tasks:** /get_tasks_mobile/\<int:group_id> if a group with this id exists, returns all of its tasks' details as well as the group's task completion status as a json, else returns json {'tasks': []}
+  - **Get group's messages:** /get_group_messages/\<int:group_id>/\<int:number_of_messages> if a group exists returns up to last 'number_of_messages' details of that group as a json, else returns {'message_id': -1}
+    - The original version of the app envisioned messaging and task rewards functionality within each group, however, it was cut from the prototype due to time limitations. The messaging API remains.
+  - **Get group task status:** Upon receiving a json with group id, task id and status, queries the db and ia group with this task id exists, updates the task's status value to the one provided in json, then returns {'status': 'Updated to the request sender'}, else returns {'status': 'failed'} to the sender.
 ---
 
 ## Contributors
