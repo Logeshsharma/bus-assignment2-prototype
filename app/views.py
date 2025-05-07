@@ -88,6 +88,9 @@ def login_mobile():
         if user.role == "Admin":
             return jsonify({"message": "Mobile app only available for students and mentors. To access the admin features, please use the web app backend at https://bus-test-f592.onrender.com/login", "status": "error"}), 401
 
+        if user.group_id is None:
+            return jsonify({"message": "You have not been assigned a group yet. Please wait for a day and try again. If the problem persists, contact the admin supervisors", "status": "error"}), 401
+
 
         return jsonify(
             {"message": "Login successful", "status": "success", "id": user.id, "username": user.username,
