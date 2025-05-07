@@ -15,6 +15,7 @@ from dataclasses import dataclass
 
 @dataclass
 class User(UserMixin, db.Model):
+    # Contains all users in the system.
     __tablename__ = 'users'
 
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
@@ -57,6 +58,7 @@ def load_user(id):
 
 @dataclass
 class Group(db.Model):
+    # Contains all groups in the system. Each group has 5 member as a list (4 mentors and 1 student)
     __tablename__ = 'groups'
 
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
@@ -82,6 +84,7 @@ class Group(db.Model):
 
 @dataclass
 class Task(db.Model):
+    # Contains all UNIQUE tasks added to the system.
     __tablename__ = 'tasks'
 
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
@@ -109,6 +112,7 @@ class Task(db.Model):
 
 @dataclass
 class GroupTaskStatus(db.Model):
+    # Tracks a particular group's progress regarding each unique tasks through a combination of group_id and task_id used as foreign ids and primary keys simultaneously.
     __tablename__ = 'groupTaskStatuses'
 
     status: so.Mapped[str] = so.mapped_column(sa.String(32), default="Inactive")
@@ -129,6 +133,7 @@ class GroupTaskStatus(db.Model):
 
 @dataclass
 class Message(db.Model):
+    # Contains every group's messages and their details. Not used in the app as the messaging functionality was not fully implemented.
     __tablename__ = 'messages'
 
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
