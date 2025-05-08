@@ -72,21 +72,21 @@ def reset_db():
     u18 = User(username='Gibby16', student_id=899995, email='Gibby6@student.bham.ac.uk', role='Mentor',
                password_hash=generate_password_hash('Gibbyjones1234!'), registered=True)
 
-    u19 = User(username='TestStudent1', student_id=899911, email='Gibby11@student.bham.ac.uk', role='Student',
+    u19 = User(username='TestStudent1', student_id=899911, email='TestStudent1@student.bham.ac.uk', role='Student',
                registered=True)
 
-    u20 = User(username='TestStudent2', student_id=899912, email='Gibby12@student.bham.ac.uk', role='Student',
+    u20 = User(username='TestStudent2', student_id=899912, email='TestStudent2@student.bham.ac.uk', role='Student',
                password_hash=generate_password_hash('Gibbyjones1234!'), registered=True)
-    u21 = User(username='TestStudent3', student_id=899992, email='Gibby13@student.bham.ac.uk', role='Student',
+    u21 = User(username='TestStudent3', student_id=899913, email='TestStudent3@student.bham.ac.uk', role='Student',
                registered=True)
 
-    u22 = User(username='TestStudent4', student_id=899914, email='Gibby14@student.bham.ac.uk', role='Student',
+    u22 = User(username='TestStudent4', student_id=899914, email='TestStudent4@student.bham.ac.uk', role='Student',
                password_hash=generate_password_hash('Gibbyjones1234!'), registered=True)
 
-    u23 = User(username='TestStudent5', student_id=899915, email='Gibby15@student.bham.ac.uk', role='Student',
+    u23 = User(username='TestStudent5', student_id=899915, email='TestStudent5@student.bham.ac.uk', role='Student',
                registered=True)
 
-    u24 = User(username='TestMentor1', student_id=899916, email='Gibby17@student.bham.ac.uk', role='Mentor',
+    u24 = User(username='TestMentor1', student_id=899916, email='TestMentor1@student.bham.ac.uk', role='Mentor',
                registered=True)
 
     db.session.add_all(
