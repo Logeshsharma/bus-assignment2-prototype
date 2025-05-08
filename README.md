@@ -11,18 +11,23 @@ This documentation focuses on Mix&Match Admin, which is primarily meant for Admi
 ---
 
 
-## How to Run the Project
+## Step-by-step instructions on how to run the project
 
-**Requirements:**  
-- Python 3.12
-- pip (Python package manager)
+**Requirements:** - Python 3.12.8 and conda 25.1.0
 
 **Steps:**  
-1. Open a terminal and navigate to the downloaded project directory.  
-2. (Optional but recommended) Create and activate a virtual environment.  
-3. Install the dependencies using pip and the `requirements.txt` file.  
-4. Run the application using the `run.py` entry point.  
-5. Access the application in your browser at [127.0.0.1:5000](http://127.0.0.1:5000).
+1. Unzip and Open the Project:  Extract the downloaded ZIP file. Open the extracted folder in PyCharm. 
+2. Install Dependencies: Open the terminal in PyCharm. Run the following command to install required packages:
+```pip install -r requirements.txt```
+3. Configure Flask Run Settings in PyCharm - Go to Run > Edit Configurations - follow the screenshot instructions
+
+![img.png](run_config.png)
+
+4. Initialize the Database - In the terminal, enter the - flask shell
+5. Run the command to create and populate the database - reset_db()
+6. Start the application by running the configuration you created.
+7. The app will be available at: http://127.0.0.1:5000
+8. Use admin of the test users defined in debug_utils.py to log in.
 
 
 ### Disclaimer: The current implementation of the Mix&Match Android will not connect to the local version of the Mix&Match Admin application at http://127.0.0.1:5000. Instead, it's hardcoded to connect to https://bus-test-f592.onrender.com running on a free server (allow up to a minute to load for the first time). Therefore, if you wish to test whether the changes in Mix&Match Admin's database reflect in the Android App, please test these changes at the onrender.com server address provided. Bear in mind that the server/db resets after approx 15 minutes of inactivity.
