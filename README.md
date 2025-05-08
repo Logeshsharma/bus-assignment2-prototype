@@ -79,3 +79,5 @@ This documentation focuses on Mix&Match Admin, which is primarily meant for Admi
 - Mashrur Hossain Chowdhury Ritom (2867717)
 
 *Each member contributed equally (20%).*
+
+### [Git Log](https://github.com/Logeshsharma/bus-assignment2-prototype/blob/main/git-log.txt)
