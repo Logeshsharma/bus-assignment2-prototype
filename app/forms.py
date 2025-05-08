@@ -6,7 +6,7 @@ from wtforms.validators import DataRequired, EqualTo, NumberRange, ValidationErr
 import re
 import datetime
 
-
+# Lines 9-28 are custom validators for the forms used in the web app.
 def isUniversityEmail(form, field):
     if not field.data.endswith("@student.bham.ac.uk"):
         raise ValidationError("Email must be the student university email ending with \"@student.bham.ac.uk\"")
@@ -16,14 +16,7 @@ def hasUppercase(form, field):
     if not re.search(r'[A-Z]', password):
         raise ValidationError("Password must have at least one uppercase character")
 
-# def isLaterThan(time=None, message="This field must have a later date"):
-#     def _validator(form, field):
-#         comparison_time = time or datetime.datetime.now()
-#         if not field.data:
-#             return
-#         if field.data <= comparison_time:
-#             raise ValidationError(message)
-#     return _validator
+
 def hasLowercase(form, field):
     password = field.data
     if not re.search(r'[a-z]', password):
@@ -33,6 +26,9 @@ def hasSpecialCharacter(form, field):
     password = field.data
     if not re.search(r'[^a-zA-Z0-9]', password):
         raise ValidationError("Password must have at least one special character")
+
+
+# Rest of the lines contains all the forms used in the app.
 
 class ChooseForm(FlaskForm):
     choice = HiddenField('Choice')
@@ -60,6 +56,7 @@ class TaskForm(FlaskForm):
     def validate_end_datetime(form, field):
         if field.data <= form.start_datetime.data:
             raise ValidationError("Task end time must be after start time.")
+
 class RegisterForm(FlaskForm):
     student_id = IntegerField("Student ID number", validators=[DataRequired(message="A numerical value is required"), NumberRange(min=1000000, max=99999999, message="Student ID must be between 7 and 8 digits")])
     username = StringField("First name and Last name separated by a space", validators=[DataRequired(), Length(min=1, max=64, message="Username must be between 1 and 64 characters")])
