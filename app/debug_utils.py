@@ -72,7 +72,26 @@ def reset_db():
     u18 = User(username='Gibby16', student_id=899995, email='Gibby6@student.bham.ac.uk', role='Mentor',
                password_hash=generate_password_hash('Gibbyjones1234!'), registered=True)
 
-    db.session.add_all([a, u1, u2, u3, u4, u5, u6, u7, u8, u9, u10, u11, u12, u13, u14, u15, u16, u17, u18 ])
+    u19 = User(username='TestStudent1', student_id=899911, email='Gibby11@student.bham.ac.uk', role='Student',
+               registered=True)
+
+    u20 = User(username='TestStudent2', student_id=899912, email='Gibby12@student.bham.ac.uk', role='Student',
+               password_hash=generate_password_hash('Gibbyjones1234!'), registered=True)
+    u21 = User(username='TestStudent3', student_id=899992, email='Gibby13@student.bham.ac.uk', role='Student',
+               registered=True)
+
+    u22 = User(username='TestStudent4', student_id=899914, email='Gibby14@student.bham.ac.uk', role='Student',
+               password_hash=generate_password_hash('Gibbyjones1234!'), registered=True)
+
+    u23 = User(username='TestStudent5', student_id=899915, email='Gibby15@student.bham.ac.uk', role='Student',
+               registered=True)
+
+    u24 = User(username='TestMentor1', student_id=899916, email='Gibby17@student.bham.ac.uk', role='Mentor',
+               registered=True)
+
+    db.session.add_all(
+        [a, u1, u2, u3, u4, u5, u6, u7, u8, u9, u10, u11, u12, u13, u14, u15, u16, u17, u18, u19, u20, u21, u22, u23,
+         u24])
     db.session.commit()
 
     t1 = Task(title="Meet frens", description="Go outside and touch grass with some people", isUpload=True,
